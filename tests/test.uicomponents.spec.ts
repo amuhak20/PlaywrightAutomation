@@ -152,8 +152,107 @@ test('Web Tables', async ({ page }) => {
             }
         }
     }
+})
+
+test('Datepicker', async ({ page }) => {
+
+    const inputDate = '2'
+    await page.getByText('Forms').click()
+    await page.getByText('Datepicker').click()
+
+    await page.getByPlaceholder('Form Picker').click()
+    await page.locator('.day-cell:not(.bounding-month)').getByText(inputDate , {exact: true}).click()
+    const selectedDate = await page.getByPlaceholder('Form Picker').inputValue()
+    console.log(`Selected date: ${selectedDate}`)
+    expect(selectedDate).toContain(inputDate)
+})
+
+test('Dynamic Datepicker', async ({ page }) => {
+
+    await page.getByText('Forms').click()
+    await page.getByText('Datepicker').click()
+    await page.getByPlaceholder('Form Picker').click()
+
+
+    const date = new Date()
+    date.setDate(date.getDate() + 50) // Add 5 days to the current date
+    const currentDay = date.getDate().toString()
+    const currentMonth = date.toLocaleString('en-US', { month: 'short' })
+    const currentMonthLong = date.toLocaleString('en-US', { month: 'long' })
+
+    const currentYear = date.getFullYear()
+    const inputDate = `${currentMonth} ${currentDay}, ${currentYear}`
+
+    let currentMontAndYear = await page.locator('nb-calendar-view-mode').textContent()
+    const expectedMonthAndYear = `${currentMonthLong} ${currentYear}`
+
+    while (!currentMontAndYear?.includes(expectedMonthAndYear)) {
+        await page.locator('.next-month').click()
+        currentMontAndYear = await page.locator('nb-calendar-view-mode').textContent()
+    }
+
+    await page.locator('.day-cell:not(.bounding-month)').getByText(currentDay , {exact: true}).click()
+    const selectedDate = await page.getByPlaceholder('Form Picker').inputValue()
+    console.log(`Selected date: ${selectedDate}`)
+    expect(selectedDate).toContain(inputDate)
 
 })
+
+test('Slider', async ({ page }) => {
+    await page.getByText('Forms').click()
+    await page.getByText('IoT Dashboard').click()
+
+    const slider = page.locator('[tabtitle="Temperature"] ngx-temperature-dragger')
+    //Mouse actions to drag the slider
+     await slider.scrollIntoViewIfNeeded()
+
+
+    const sliderBox = await slider.boundingBox()
+    const x =sliderBox?.x +sliderBox?.width/2
+    const y =sliderBox?.y +sliderBox?.height/2
+
+    await page.mouse.move(x, y)
+    await page.mouse.down()
+    await page.mouse.move(x + 100, y)
+    await page.mouse.move(x + 100, y+100)
+
+    await page.mouse.up()
+    expect(slider).toContainText('30')
+
+ 
+    //Setting attribute value directly
+    await slider.evaluate((sliderElement) => {
+        sliderElement.setAttribute('cx', '232.630')
+        sliderElement.setAttribute('cy', '232.630')
+    })
+await slider.click()
+expect(await slider.getAttribute('cx')).toBe('232.630')
+
+})  
+
+
+test('iFrame', async ({ page }) => {
+    await page.getByText('Modal & Overlays').click()
+    await page.getByText('Dialog').click()
+    const frameLocator = page.frameLocator('[data-cy="esc-close-iframe"]')
+    await frameLocator.getByRole('button', { name: 'Open Dialog with esc close' }).click()
+
+})
+
+test('Drag and Drop', async ({ page }) => {
+    await page.getByText('Extra Components').click()
+    await page.getByText('Drag & Drop').click()
+    //Using dragTo method to perform drag and drop
+    await page.getByText('Feed the dog').dragTo(page.locator('#drop-list'))
+
+    //Using mouse actions to perform drag and drop
+    await page.getByText('Hangout with friends').hover()
+    await page.mouse.down()
+    await page.locator('#drop-list').hover()
+    await page.mouse.up()
+
+})
+
 test.afterEach(async ({ page }) => {
     await page.close()
 })
