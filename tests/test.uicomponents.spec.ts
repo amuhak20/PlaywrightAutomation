@@ -121,13 +121,37 @@ test('Web Tables', async ({ page }) => {
     await page.getByText('Tables & Data').click()
     await page.getByText('Smart Table').click()
 
+    //Select row by visible text and edit the age value
     const tableRow = page.getByRole('row', {name: 'twitter@outlook.com'})
     await tableRow.locator('.nb-edit').click()
     await tableRow.getByPlaceholder('Age').fill('25')
     await tableRow.locator('.nb-checkmark').click()
     await expect(tableRow.locator('td').last()).toHaveText('25')
 
+    //Select row by index and edit the age value
+    const tableRowByIndex = page.getByRole('row').filter({ has: page.getByRole('cell').nth(1).getByText('10') })
+    const rowByIdex = page.getByRole('row', {name: '10'})
+    await tableRowByIndex.locator('.nb-edit').click()
+    await rowByIdex.getByPlaceholder('E-mail').fill('test@test.com')
+    await rowByIdex.locator('.nb-checkmark').click()
+    await expect(tableRowByIndex.locator('td').nth(5)).toHaveText('test@test.com')
 
+    //Iterate all rows and verify data
+    const ages = ["20", "30", "40", "150"]
+
+    for (const age of ages) {
+        console.log(`Verifying age: ${age}`)
+        await page.getByPlaceholder('Age').fill(age)
+
+        if (age == "150") {
+           await expect(page.locator('tbody')).toContainText('No data found')
+        } else {
+            const rows = await page.locator('tbody').all()
+            for (const row of rows) {
+                await expect(row.locator('td').last()).toHaveText(age)
+            }
+        }
+    }
 
 })
 test.afterEach(async ({ page }) => {
