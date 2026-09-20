@@ -208,8 +208,9 @@ test('Slider', async ({ page }) => {
 
 
     const sliderBox = await slider.boundingBox()
-    const x =sliderBox?.x +sliderBox?.width/2
-    const y =sliderBox?.y +sliderBox?.height/2
+    if (!sliderBox) throw new Error('Slider bounding box is unavailable')
+    const x = sliderBox.x + sliderBox.width / 2
+    const y = sliderBox.y + sliderBox.height / 2
 
     await page.mouse.move(x, y)
     await page.mouse.down()
