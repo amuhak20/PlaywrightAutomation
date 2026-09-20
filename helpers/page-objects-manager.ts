@@ -1,7 +1,7 @@
 import { Page } from '@playwright/test'
-import { NavigatePage } from './navigation-page'
-import { DatePickerLayout } from './date-picker-layour'
-import { FormObjectsLayout } from './form-objects-layout'
+import { NavigatePage } from '../page-objects/navigation-page'
+import { DatePickerLayout } from '../page-objects/date-picker-layour'
+import { FormObjectsLayout } from '../page-objects/form-objects-layout'
 
 export class PageObjectsManager {
     readonly NavigateTo: NavigatePage

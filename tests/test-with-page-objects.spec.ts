@@ -1,7 +1,7 @@
 import {test, expect} from '@playwright/test'
 
 
-import { PageObjectsManager } from '../page-objects/page-objects-manager'
+import { PageObjectsManager } from '../helpers/page-objects-manager'
 test.beforeEach(async ({ page }) => {
     await page.goto('https://playground.bondaracademy.com')
 })
