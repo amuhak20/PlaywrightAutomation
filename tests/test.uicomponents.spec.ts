@@ -1,7 +1,8 @@
 import { test, expect } from "@playwright/test"
+import dotenv from 'dotenv'
 
 test.beforeEach(async ({ page }) => {
-    await page.goto('https://playground.bondaracademy.com/')
+    await page.goto('/')
 })
 
 test.describe('UI Components', () => {
@@ -18,10 +19,11 @@ test('Input boxes', async ({ page }) => {
     expect(emailText).toContain('test.com')
     await page.getByTestId('inputEmail1').clear()
     const clearedEmailText = await page.getByTestId('inputEmail1').inputValue()
+    await page.screenshot({path:'screenshots/inputboxfail.png'})
     expect(clearedEmailText).toBe('')
 })
 
-test('radio buttons', async ({ page }) => {
+test('radio buttons', {tag: '@smoke'}, async ({ page }) => {
     const firstRadioButton = page.getByRole('radio', { name: 'Option 1' })
     await firstRadioButton.check({ force: true })
     await expect(firstRadioButton).toBeChecked()
@@ -33,6 +35,7 @@ test('radio buttons', async ({ page }) => {
     await expect(firstRadioButton).not.toBeChecked()
     const isFirstRadioButtonUnChecked = await firstRadioButton.isChecked()
     expect(isFirstRadioButtonUnChecked).toBeFalsy()
+    expect(secondRadioButton).toHaveScreenshot()
 })
 })
 
@@ -58,7 +61,7 @@ console.log(`Total checkboxes on the page: ${await checkboxCount.count()}`)
 
 })
 
-test('Dropdowns and Lists', async ({ page }) => {
+test('Dropdowns and Lists', {tag:'@smoke'}, async ({ page }) => {
     await page.getByText('Modal & Overlays').click()
     await page.getByText('Toastr').click()
 

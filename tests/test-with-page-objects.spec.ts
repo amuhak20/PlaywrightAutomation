@@ -6,6 +6,11 @@ test.beforeEach(async ({ page }) => {
     await page.goto('https://playground.bondaracademy.com')
 })
 
+test.afterEach(async ({ page }, testInfo) => {
+    console.log(`Test '${testInfo.title}' completed with status: ${testInfo.status}`)
+    await page.close()
+})
+
 test('Navigation', async ({ page }) => {
     const pom = new PageObjectsManager(page)
     await pom.NavigateTo.navigateToForms()
@@ -19,7 +24,7 @@ test('Parametrized Navigation', async ({ page }, testInfo) => {
       const pom = new PageObjectsManager(page)
 
     await pom.NavigateTo.navigateToForms()
-    await pom.formObject.submitUsingGridForm('test@example.com', 'password123', 'Option 2')
+    await pom.formObject.submitUsingGridForm(process.env.TEST_USER!, process.env.TEST_PASSWORD!, 'Option 2')
     await pom.formObject.submitInlineForm('Jane Doe', 'jane.doe@example.com', false)
     await pom.datePicker.selectDateFromDatePicker(7)
     await pom.datePicker.selectDateRangeFromDatePicker(3, 10)

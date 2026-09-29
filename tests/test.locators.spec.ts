@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 
 test.beforeEach(async ({ page }) => {
-  await page.goto('https://playground.bondaracademy.com/pages/iot-dashboard');
+  await page.goto('/');
   await page.getByText('Forms').click();
   await page.getByText('Form Layouts').click();
 })

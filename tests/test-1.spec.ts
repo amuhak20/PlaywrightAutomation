@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test';
+import {faker} from '@faker-js/faker'
 
 /**
  * tests/test-1.spec.ts
@@ -25,11 +26,13 @@ test('form layouts: fill and submit', async ({ page }) => {
   await page.getByRole('link', { name: 'Forms' }).click();
   await page.getByRole('link', { name: 'Form Layouts' }).click();
 
+  const fullname = faker.person.fullName()
+  const email = faker.internet.email()
   // Fill the visible "Jane Doe" textbox (example name field)
-  await page.getByRole('textbox', { name: 'Jane Doe' }).fill('Teste');
+  await page.getByRole('textbox', { name: 'Jane Doe' }).fill(fullname);
 
   // Locate the specific form by text content and fill the email placeholder
-  await page.locator('form').filter({ hasText: 'Remember meSubmit' }).getByPlaceholder('Email').fill('test@test.com');
+  await page.locator('form').filter({ hasText: 'Remember meSubmit' }).getByPlaceholder('Email').fill(email);
 
   // Click the visible custom checkbox associated with the "Remember me" label
   // (scoped to the specific form to avoid strict-mode multiple-match errors)
