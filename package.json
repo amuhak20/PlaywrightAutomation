@@ -11,7 +11,8 @@
     "test": "tests"
   },
   "scripts": {
-    "testrun": "npx playwright test tests/test.uicomponents.spec.ts -g 'Input boxes' --project=chromium"
+    "testrun": "npx playwright test tests/test.uicomponents.spec.ts -g 'Input boxes' --project=chromium",
+    "test:update": "npm install -D @playwright/test@latest && npx playwright install --with-deps"
   },
   "dependencies": {
     "dotenv": "^18.0.4",
@@ -21,7 +22,7 @@
   },
   "devDependencies": {
     "@faker-js/faker": "^10.6.0",
-    "@playwright/test": "^1.62.1",
+    "@playwright/test": "^1.64.1",
     "@types/node": "^26.1.2"
   }
 }
