@@ -11,3 +11,5 @@ node_modules/
 /playwright/.env.qa/
 /.env
 /.env.qa
+/allure-results/
+/allure-report/
